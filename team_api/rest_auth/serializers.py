@@ -54,3 +54,31 @@ class TokenSerializer(serializers.ModelSerializer):
         fields = ('key',)
         model = Token
         read_only_fields = ('key',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for users.
+    """
+
+    class Meta:
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            },
+        }
+        fields = ('email', 'password')
+        model = get_user_model()
+
+    def create(self, validated_data):
+        """
+        Create a new user.
+
+        Args:
+            validated_data:
+                The data to create a new user from.
+
+        Returns:
+            A new user instance.
+        """
+        return get_user_model().objects.create_user(**validated_data)
