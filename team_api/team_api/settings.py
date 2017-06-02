@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # Custom Apps
     'rest_auth',
+    'teams',
 ]
 
 MIDDLEWARE = [
