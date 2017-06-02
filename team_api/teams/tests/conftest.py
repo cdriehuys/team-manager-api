@@ -2,6 +2,8 @@ import pytest
 
 from rest_framework.test import APIClient, APIRequestFactory
 
+from rest_auth.factories import UserFactory
+
 from teams import factories
 
 
@@ -49,3 +51,25 @@ def team_factory(db):
         ``teams.factories.TeamFactory``
     """
     return factories.TeamFactory
+
+
+@pytest.fixture
+def team_member_factory(db):
+    """
+    Get the factory used for creating team members.
+
+    Returns:
+        ``teams.factories.TeamMemberFactory``
+    """
+    return factories.TeamMemberFactory
+
+
+@pytest.fixture
+def user_factory(db):
+    """
+    Get the factory used for creating users.
+
+    Returns:
+        ``rest_auth.factories.UserFactory``
+    """
+    return UserFactory
