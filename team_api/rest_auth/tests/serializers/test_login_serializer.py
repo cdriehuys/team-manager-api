@@ -13,12 +13,13 @@ def test_validate_credentials(user_factory):
     }
 
     # Create a user with test credentials
-    user_factory(**data)
+    user = user_factory(**data)
 
     # Create a serializer with the same credentials
     serializer = LoginSerializer(data=data)
 
-    assert serializer.is_valid(), serializer.errors
+    assert serializer.is_valid()
+    assert serializer.user == user
 
 
 @pytest.mark.django_db

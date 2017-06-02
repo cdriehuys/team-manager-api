@@ -9,7 +9,7 @@ from rest_auth.views import LoginView
 login_view = LoginView.as_view()
 
 
-def test_post(api_rf, user_factory):
+def test_post(api_rf, token_factory, user_factory):
     """
     If valid credentials are posted, a response containing the user's
     token should be returned.
@@ -19,13 +19,16 @@ def test_post(api_rf, user_factory):
         'password': 'password',
     }
 
-    user_factory(**data)
+    user = user_factory(**data)
+    token = token_factory(user=user)
+
+    serializer = serializers.TokenSerializer(token)
 
     request = api_rf.post('/', data)
     response = login_view(request)
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.data == {}
+    assert response.data == serializer.data
 
 
 @pytest.mark.django_db

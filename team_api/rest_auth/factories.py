@@ -1,6 +1,16 @@
 import factory
 
 
+class TokenFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for creating auth tokens.
+    """
+    user = factory.SubFactory('rest_auth.factories.UserFactory')
+
+    class Meta:
+        model = 'authtoken.Token'
+
+
 class UserFactory(factory.django.DjangoModelFactory):
     """
     Factory for creating users.

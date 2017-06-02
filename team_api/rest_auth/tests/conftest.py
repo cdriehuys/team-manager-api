@@ -17,6 +17,17 @@ def api_rf():
 
 
 @pytest.fixture
+def token_factory(db):
+    """
+    Return the factory used to create tokens.
+
+    Returns:
+        ``rest_auth.factories.TokenFactory``
+    """
+    return factories.TokenFactory
+
+
+@pytest.fixture
 def user_factory(db):
     """
     Return the factory used to create users.

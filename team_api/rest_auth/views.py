@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
@@ -18,7 +19,10 @@ class LoginView(GenericAPIView):
         serializer = self.get_serializer(data=request.POST)
 
         if serializer.is_valid():
-            return Response({})
+            token, _ = Token.objects.get_or_create(user=serializer.user)
+            token_serializer = serializers.TokenSerializer(token)
+
+            return Response(token_serializer.data)
         else:
             return Response(
                 serializer.errors,

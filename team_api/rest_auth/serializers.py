@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import ugettext as _
 
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 
 class LoginSerializer(serializers.Serializer):
@@ -18,6 +19,10 @@ class LoginSerializer(serializers.Serializer):
         """
         Validate the provided credentials.
 
+        As a side effect, the validation also saves the user
+        corresponding to the provided credentials so we don't have to
+        look it up again.
+
         Args:
             data:
                 A dictionary containing the credentials to validate.
@@ -30,11 +35,22 @@ class LoginSerializer(serializers.Serializer):
                 if the provided credentials are invalid.
         """
         try:
-            user = get_user_model().objects.get(email=data['email'])
+            self.user = get_user_model().objects.get(email=data['email'])
         except ObjectDoesNotExist:
             raise ValidationError(_('Invalid credentials.'))
 
-        if not user.check_password(data['password']):
+        if not self.user.check_password(data['password']):
             raise ValidationError(_('Invalid credentials.'))
 
         return data
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    """
+    Serializer for auth tokens.
+    """
+
+    class Meta:
+        fields = ('key',)
+        model = Token
+        read_only_fields = ('key',)
