@@ -7,11 +7,14 @@ from teams import models, serializers
 
 
 @pytest.mark.django_db
-def test_create_team(api_client):
+def test_create_team(api_client, user_factory):
     """
     Submitting a valid POST request to the view should create a new
     team.
     """
+    user = user_factory()
+    api_client.force_authenticate(user=user)
+
     data = {
         'name': 'Test Team',
     }

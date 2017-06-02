@@ -7,10 +7,12 @@ from teams.serializers import TeamSerializer
 
 
 @pytest.mark.django_db
-def test_create(serializer_context):
+def test_create(serializer_context, user_factory):
     """
     Saving a team serializer with valid data should create a new team.
     """
+    user = user_factory()
+
     data = {
         'name': 'Test Team',
     }
@@ -18,10 +20,18 @@ def test_create(serializer_context):
     serializer = TeamSerializer(data=data, context=serializer_context)
     assert serializer.is_valid()
 
-    team = serializer.save()
+    team = serializer.save(user=user)
 
     assert models.Team.objects.count() == 1
     assert team.name == data['name']
+
+    assert models.TeamMember.objects.count() == 1
+
+    member = models.TeamMember.objects.get()
+
+    assert member.is_admin
+    assert member.team == team
+    assert member.user == user
 
 
 def test_serialize(serializer_context, team_factory):
