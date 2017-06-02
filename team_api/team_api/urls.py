@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),     # noqa
     url(r'^auth/', include('rest_auth.urls')),
     url(r'^docs/', include_docs_urls('Team Manager API')),
+    url(r'^team/', include('teams.urls')),
 ]
