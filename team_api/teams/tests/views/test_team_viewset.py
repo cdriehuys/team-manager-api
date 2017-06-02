@@ -42,7 +42,7 @@ def test_delete(api_client, team_factory):
     assert models.Team.objects.count() == 0
 
 
-def test_list_teams(api_client, team_factory):
+def test_list_teams(api_client, serializer_context, team_factory):
     """
     The team list should return a list of serialized teams.
     """
@@ -52,6 +52,7 @@ def test_list_teams(api_client, team_factory):
 
     serializer = serializers.TeamSerializer(
         models.Team.objects.all(),
+        context=serializer_context,
         many=True)
 
     url = reverse('teams:team-list')
