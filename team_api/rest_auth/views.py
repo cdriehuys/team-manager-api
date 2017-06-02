@@ -1,12 +1,13 @@
-from rest_framework import status
+from django.contrib.auth import get_user_model
+
+from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from rest_auth import serializers
 
 
-class LoginView(GenericAPIView):
+class LoginView(generics.GenericAPIView):
     """
     View for obtaining auth tokens.
     """
@@ -27,3 +28,12 @@ class LoginView(GenericAPIView):
             return Response(
                 serializer.errors,
                 status=status.HTTP_401_UNAUTHORIZED)
+
+
+class RegistrationView(generics.CreateAPIView):
+    """
+    create:
+    Register a new user.
+    """
+    model = get_user_model()
+    serializer_class = serializers.UserSerializer
