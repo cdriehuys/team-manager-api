@@ -18,10 +18,4 @@ class UserFactory(factory.django.DjangoModelFactory):
         """
         manager = cls._get_manager(model_class)
 
-        password = kwargs.pop('password')
-
-        user = manager.create(*args, **kwargs)
-        user.set_password(password)
-        user.save()
-
-        return user
+        return manager.create_user(*args, **kwargs)
