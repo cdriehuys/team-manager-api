@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     # Third Party Apps
     'rest_framework',
     'rest_framework.authtoken',
+
+    # Custom Apps
+    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +86,10 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+# Custom user model
+AUTH_USER_MODEL = 'rest_auth.User'
 
 
 # Password validation
