@@ -1,5 +1,6 @@
 -r base.txt
 
+factory_boy
 flake8
 pytest
 pytest-django
