@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from rest_framework.authtoken import views as token_views
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/auth/login/$', token_views.obtain_auth_token),
 ]
