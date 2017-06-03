@@ -7,7 +7,7 @@ from rest_auth.factories import UserFactory
 from teams import factories
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def api_client():
     """
     Get an instance of DRF's ``APIClient``.

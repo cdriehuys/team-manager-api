@@ -1,7 +1,7 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from teams import models, serializers
+from teams import models, permissions, serializers
 
 
 class TeamListViewSet(viewsets.ModelViewSet):
@@ -24,6 +24,7 @@ class TeamListViewSet(viewsets.ModelViewSet):
     delete:
     Delete a team.
     """
+    permission_classes = (permissions.TeamPermission,)
     queryset = models.Team.objects.all()
     serializer_class = serializers.TeamSerializer
 
