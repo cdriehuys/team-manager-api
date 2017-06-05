@@ -76,6 +76,21 @@ def test_delete_not_admin(api_client, team_member_factory):
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
+def test_get_team(api_client, team_factory):
+    """
+    Sending a GET request to a team's detail view should return the
+    team's details.
+    """
+    team = team_factory()
+    serializer = serializers.TeamSerializer(team)
+
+    url = reverse('teams:team-detail', kwargs={'pk': team.pk})
+    response = api_client.get(url)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data == serializer.data
+
+
 def test_list_teams(api_client, serializer_context, team_factory):
     """
     The team list should return a list of serialized teams.
@@ -84,7 +99,7 @@ def test_list_teams(api_client, serializer_context, team_factory):
     team_factory(name='Team 2')
     team_factory(name='Team 3')
 
-    serializer = serializers.TeamSerializer(
+    serializer = serializers.TeamListSerializer(
         models.Team.objects.all(),
         context=serializer_context,
         many=True)

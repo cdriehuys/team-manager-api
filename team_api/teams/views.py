@@ -26,7 +26,6 @@ class TeamListViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (permissions.TeamPermission,)
     queryset = models.Team.objects.all()
-    serializer_class = serializers.TeamSerializer
 
     def create(self, request):
         """
@@ -44,3 +43,18 @@ class TeamListViewSet(viewsets.ModelViewSet):
         serializer.save(user=request.user)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_serializer_class(self):
+        """
+        Get the appropriate serializer for the action being performed.
+
+        If we are listing teams, the ``TeamListSerializer`` class should
+        be used. Otherwise we should use the ``TeamSerializer`` class.
+
+        Returns:
+            The serializer class to be used for the response.
+        """
+        if self.action == 'list':
+            return serializers.TeamListSerializer
+
+        return serializers.TeamSerializer
