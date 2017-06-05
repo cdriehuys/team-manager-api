@@ -16,6 +16,15 @@ def test_create():
     user.save()
 
 
+def test_get_short_name(user_factory):
+    """
+    ``get_short_name`` should return the user's email.
+    """
+    user = user_factory()
+
+    assert user.get_short_name() == user.email
+
+
 def test_get_username(user_factory):
     """
     ``get_username`` should return the user's email.

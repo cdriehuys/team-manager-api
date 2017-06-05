@@ -26,3 +26,12 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     # Use custom manager
     objects = managers.UserManager()
+
+    def get_short_name(self):
+        """
+        Get a short name for the user.
+
+        Returns:
+            The user's email address.
+        """
+        return self.email
