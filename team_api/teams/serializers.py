@@ -3,6 +3,35 @@ from rest_framework import serializers
 from teams import models
 
 
+class TeamMemberListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for listing instances of the ``TeamMember`` model.
+    """
+    member_type_name = serializers.CharField(source='get_member_type_display')
+    name = serializers.CharField(source='user.get_short_name')
+
+    class Meta:
+        fields = ('name', 'member_type', 'member_type_name')
+        model = models.TeamMember
+
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    """
+    Serializer for single instances of the ``TeamMember`` model.
+    """
+    member_type_name = serializers.CharField(source='get_member_type_display')
+    name = serializers.CharField(source='user.get_short_name')
+    team = serializers.HyperlinkedRelatedField(
+        queryset=models.Team.objects.all(),
+        view_name='teams:team-detail')
+
+    class Meta:
+        fields = (
+            'name', 'team', 'member_type', 'member_type_name', 'is_admin'
+        )
+        model = models.TeamMember
+
+
 class TeamSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for the Team model.
