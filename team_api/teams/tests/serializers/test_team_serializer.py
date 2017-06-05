@@ -49,13 +49,9 @@ def test_serialize(serializer_context, team_factory, team_member_factory):
         context=serializer_context,
         many=True)
 
-    serializer = serializers.TeamSerializer(team, context=serializer_context)
+    serializer = serializers.TeamSerializer(team)
 
     expected = {
-        'url': reverse(
-            'teams:team-detail',
-            kwargs={'pk': team.pk},
-            request=serializer_context['request']),
         'name': team.name,
         'members': member_serializer.data,
     }
