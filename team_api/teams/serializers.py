@@ -11,7 +11,7 @@ class TeamMemberListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user.get_short_name')
 
     class Meta:
-        fields = ('name', 'member_type', 'member_type_name')
+        fields = ('name', 'member_type_name')
         model = models.TeamMember
 
 

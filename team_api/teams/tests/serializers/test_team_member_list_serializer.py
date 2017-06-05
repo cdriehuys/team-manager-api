@@ -10,7 +10,6 @@ def test_serialize(team_member_factory):
 
     expected = {
         'name': member.user.get_short_name(),
-        'member_type': member.member_type,
         'member_type_name': member.get_member_type_display(),
     }
 
