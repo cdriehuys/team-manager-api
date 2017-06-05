@@ -9,7 +9,7 @@ class Team(models.Model):
     """
     name = models.CharField(
         max_length=255,
-        verbose_name=_('Name'))
+        verbose_name=_('name'))
 
     def __str__(self):
         """
@@ -40,17 +40,17 @@ class TeamMember(models.Model):
         default=False,
         help_text=_("Admin members are allowed to edit the team's "
                     "information, as well as change player info."),
-        verbose_name=_('Is admin'))
+        verbose_name=_('is admin'))
     member_type = models.PositiveSmallIntegerField(
         choices=MEMBER_TYPE_CHOICES,
         default=PLAYER,
-        verbose_name=_('Member type'))
+        verbose_name=_('member type'))
     team = models.ForeignKey(
         'teams.Team',
         on_delete=models.CASCADE,
         related_name='members',
-        verbose_name=_('Team'))
+        verbose_name=_('team'))
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name=_('User'))
+        verbose_name=_('user'))

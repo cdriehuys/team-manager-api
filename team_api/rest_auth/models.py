@@ -14,11 +14,11 @@ class User(PermissionsMixin, AbstractBaseUser):
     """
     email = models.EmailField(
         unique=True,
-        verbose_name=_('Email'))
+        verbose_name=_('email'))
     is_staff = models.BooleanField(
         default=False,
         help_text=_('Staff users are allowed to login to the admin site.'),
-        verbose_name=_('Is staff'))
+        verbose_name=_('is staff'))
 
     # Tell Django which fields are special
     EMAIL_FIELD = 'email'
