@@ -3,7 +3,7 @@ from rest_framework import serializers
 from teams import models
 
 
-class TeamMemberListSerializer(serializers.ModelSerializer):
+class TeamMemberListSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for listing instances of the ``TeamMember`` model.
     """
@@ -11,7 +11,12 @@ class TeamMemberListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user.get_short_name')
 
     class Meta:
-        fields = ('name', 'member_type_name')
+        extra_kwargs = {
+            'url': {
+                'view_name': 'teams:member-detail',
+            },
+        }
+        fields = ('name', 'url', 'member_type_name')
         model = models.TeamMember
 
 

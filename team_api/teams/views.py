@@ -1,4 +1,4 @@
-from rest_framework import status, viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 
 from teams import models, permissions, serializers
@@ -58,3 +58,12 @@ class TeamListViewSet(viewsets.ModelViewSet):
             return serializers.TeamListSerializer
 
         return serializers.TeamSerializer
+
+
+class TeamMemberDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View or update a team member's information.
+    """
+    permission_classes = (permissions.TeamMemberPermission,)
+    queryset = models.TeamMember.objects.all()
+    serializer_class = serializers.TeamMemberSerializer

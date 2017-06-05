@@ -14,4 +14,5 @@ router.register(r'teams', views.TeamListViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^members/(?P<pk>[0-9]+)/$', views.TeamMemberDetailView.as_view(), name='member-detail'),   # noqa
 ]
