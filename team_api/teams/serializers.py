@@ -37,9 +37,13 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
     Serializer for the Team model.
     """
     url = serializers.HyperlinkedIdentityField(view_name='teams:team-detail')
+    members = TeamMemberListSerializer(
+        many=True,
+        read_only=True,
+        required=False)
 
     class Meta:
-        fields = ('url', 'name')
+        fields = ('url', 'name', 'members')
         model = models.Team
 
     def create(self, validated_data):

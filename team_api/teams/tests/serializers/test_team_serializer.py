@@ -2,8 +2,7 @@ import pytest
 
 from rest_framework.reverse import reverse
 
-from teams import models
-from teams.serializers import TeamSerializer
+from teams import models, serializers
 
 
 @pytest.mark.django_db
@@ -17,7 +16,9 @@ def test_create(serializer_context, user_factory):
         'name': 'Test Team',
     }
 
-    serializer = TeamSerializer(data=data, context=serializer_context)
+    serializer = serializers.TeamSerializer(
+        data=data,
+        context=serializer_context)
     assert serializer.is_valid()
 
     team = serializer.save(user=user)
@@ -34,12 +35,21 @@ def test_create(serializer_context, user_factory):
     assert member.user == user
 
 
-def test_serialize(serializer_context, team_factory):
+def test_serialize(serializer_context, team_factory, team_member_factory):
     """
     Test serializing a team.
     """
     team = team_factory()
-    serializer = TeamSerializer(team, context=serializer_context)
+
+    team_member_factory(team=team)
+    team_member_factory(team=team)
+
+    member_serializer = serializers.TeamMemberListSerializer(
+        team.members.all(),
+        context=serializer_context,
+        many=True)
+
+    serializer = serializers.TeamSerializer(team, context=serializer_context)
 
     expected = {
         'url': reverse(
@@ -47,6 +57,7 @@ def test_serialize(serializer_context, team_factory):
             kwargs={'pk': team.pk},
             request=serializer_context['request']),
         'name': team.name,
+        'members': member_serializer.data,
     }
 
     assert serializer.data == expected
@@ -60,7 +71,10 @@ def test_update(serializer_context, team_factory):
     team = team_factory(name='Old Name')
     data = {'name': 'New Name'}
 
-    serializer = TeamSerializer(team, data=data, context=serializer_context)
+    serializer = serializers.TeamSerializer(
+        team,
+        data=data,
+        context=serializer_context)
     assert serializer.is_valid()
 
     team = serializer.save()
