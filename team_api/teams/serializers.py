@@ -1,6 +1,31 @@
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
+
 from rest_framework import serializers
 
 from teams import models
+
+
+class TeamInviteSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the ``TeamInvite`` model.
+    """
+    class Meta:
+        fields = ('id', 'email', 'invite_accept_url', 'signup_url', 'team')
+        model = models.TeamInvite
+
+    def update(self, *args, **kwargs):
+        """
+        Prevent an update by raising a ``ValidationError``.
+
+        Invites should not be mutable because then they could be
+        different from what the user thinks they will be from the email
+        notification they received.
+
+        Raises:
+            ValidationError
+        """
+        raise ValidationError(_('Team invitations cannot be edited.'))
 
 
 class TeamMemberListSerializer(serializers.HyperlinkedModelSerializer):
