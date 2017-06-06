@@ -3,7 +3,7 @@ from rest_framework import serializers
 from teams import models
 
 
-class TeamMemberListSerializer(serializers.ModelSerializer):
+class TeamMemberListSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for listing instances of the ``TeamMember`` model.
     """
@@ -11,7 +11,12 @@ class TeamMemberListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user.get_short_name')
 
     class Meta:
-        fields = ('name', 'member_type', 'member_type_name')
+        extra_kwargs = {
+            'url': {
+                'view_name': 'teams:member-detail',
+            },
+        }
+        fields = ('name', 'url', 'member_type_name')
         model = models.TeamMember
 
 
@@ -19,15 +24,21 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     """
     Serializer for single instances of the ``TeamMember`` model.
     """
-    member_type_name = serializers.CharField(source='get_member_type_display')
-    name = serializers.CharField(source='user.get_short_name')
-    team = serializers.HyperlinkedRelatedField(
-        queryset=models.Team.objects.all(),
+    member_type_name = serializers.CharField(
+        read_only=True,
+        source='get_member_type_display')
+    name = serializers.CharField(
+        read_only=True,
+        source='user.get_short_name')
+    team_url = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        source='team',
         view_name='teams:team-detail')
 
     class Meta:
         fields = (
-            'name', 'team', 'member_type', 'member_type_name', 'is_admin'
+            'name', 'team', 'team_url', 'member_type', 'member_type_name',
+            'is_admin'
         )
         model = models.TeamMember
 

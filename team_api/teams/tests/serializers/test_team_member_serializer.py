@@ -14,7 +14,8 @@ def test_serialize(serializer_context, team_member_factory):
 
     expected = {
         'name': member.user.get_short_name(),
-        'team': reverse(
+        'team': member.team.pk,
+        'team_url': reverse(
             'teams:team-detail',
             kwargs={'pk': member.team.pk},
             request=serializer_context['request']),
@@ -24,3 +25,23 @@ def test_serialize(serializer_context, team_member_factory):
     }
 
     assert serializer.data == expected
+
+
+def test_update(serializer_context, team_factory, team_member_factory):
+    """
+    Passing data to a serializer associated with a team member should
+    allow for updating that team member's informatin.
+    """
+    member = team_member_factory()
+    team = team_factory()
+
+    data = {
+        'pk': member.pk,
+        'team': team.pk,
+    }
+
+    serializer = serializers.TeamMemberSerializer(
+        member,
+        context=serializer_context,
+        data=data)
+    assert serializer.is_valid(), serializer.errors

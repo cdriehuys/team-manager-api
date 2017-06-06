@@ -1,6 +1,46 @@
 from rest_framework import permissions
 
 
+class TeamMemberPermission(permissions.IsAuthenticatedOrReadOnly):
+    """
+    Permission for allowing access to ``TeamMember`` instances.
+
+    Read operations (``GET``, ``HEAD``, or ``OPTIONS``) are allowed by
+    anyone, but write operations (``PATCH`` or ``PUT``) are only allowed
+    for team admins and the team member themself.
+    """
+
+    def has_object_permission(self, request, view, team_member):
+        """
+        Determine if the current user has permission to perform the
+        requested action for the given team member.
+
+        Args:
+            request:
+                The request to check permissions for.
+            view:
+                The view being accessed.
+            team_member:
+                The team member that is being acted upon.
+
+        Returns:
+            If the request method is a read operation, we return
+            ``True``. If the user making the request is an admin of the
+            team member's team, or the requesting user is the team
+            member themself then we also return ``True``. If neither of
+            those checks succeeds, ``False`` is returned.
+        """
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user == team_member.user:
+            return True
+
+        return team_member.team.members.filter(
+            is_admin=True,
+            user=request.user).exists()
+
+
 class TeamPermission(permissions.BasePermission):
     """
     Permission for allowing access to ``Team`` instances.
