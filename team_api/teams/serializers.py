@@ -13,6 +13,7 @@ class TeamInviteSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'email', 'invite_accept_url', 'signup_url', 'team')
         model = models.TeamInvite
+        read_only_fields = ('team',)
 
     def update(self, *args, **kwargs):
         """

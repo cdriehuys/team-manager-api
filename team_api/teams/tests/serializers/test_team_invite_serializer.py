@@ -15,14 +15,13 @@ def test_create(team_factory):
         'email': 'test@example.com',
         'invite_accept_url': 'http://example.com/invites',
         'signup_url': 'http://example.com/signup',
-        'team': team.pk,
     }
 
     serializer = serializers.TeamInviteSerializer(data=data)
 
     assert serializer.is_valid()
 
-    invite = serializer.save()
+    invite = serializer.save(team=team)
 
     assert invite.email == data['email']
     assert invite.invite_accept_url == data['invite_accept_url']
@@ -54,14 +53,12 @@ def test_update(team_factory, team_invite_factory):
     error.
     """
     invite = team_invite_factory()
-    team = team_factory()
 
     data = {
         'id': invite.id,
         'email': 'new@example.com',
         'invite_accept_url': 'http://example.com/invites2',
         'signup_url': 'http://example.com/signup2',
-        'team': team.pk,
     }
 
     serializer = serializers.TeamInviteSerializer(invite, data=data)

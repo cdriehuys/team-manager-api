@@ -46,6 +46,26 @@ class TeamInviteListView(generics.ListCreateAPIView):
         """
         return models.TeamInvite.objects.filter(team__pk=self.kwargs.get('pk'))
 
+    def perform_create(self, serializer):
+        """
+        Create a new team invite.
+
+        We override the creation of the invite so that we can associate
+        it with the current team.
+
+        Args:
+            serializer:
+                An instance of ``TeamInvite.serializer_class`` that has
+                been populated with data.
+
+        Returns:
+            The created invite.
+        """
+        pk = self.kwargs.get('pk')
+        team = models.Team.objects.get(pk=pk)
+
+        return serializer.save(team=team)
+
 
 class TeamListViewSet(viewsets.ModelViewSet):
     """
