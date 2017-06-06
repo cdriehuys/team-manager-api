@@ -81,13 +81,16 @@ class TeamSerializer(serializers.ModelSerializer):
     """
     Serializer for the Team model.
     """
+    invites = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='teams:team-invites')
     members = TeamMemberListSerializer(
         many=True,
         read_only=True,
         required=False)
 
     class Meta:
-        fields = ('name', 'members')
+        fields = ('name', 'invites', 'members')
         model = models.Team
 
     def create(self, validated_data):
