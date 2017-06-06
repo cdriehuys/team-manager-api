@@ -136,6 +136,23 @@ class TeamMemberDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.TeamMemberSerializer
 
 
+class UserInviteDetailView(generics.DestroyAPIView):
+    """
+    View for accepting or deleting invitations.
+    """
+
+    def get_queryset(self):
+        """
+        Get the invitations matching the current user's email.
+
+        Returns:
+            A queryset of ``TeamInvite`` instances filtered by the
+            current user's email.
+        """
+        return models.TeamInvite.objects.filter(
+            email=self.request.user.email)
+
+
 class UserInviteListView(generics.ListAPIView):
     """
     List the pending invitations for a user.
