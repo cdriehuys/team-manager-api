@@ -1,6 +1,6 @@
 from rest_framework.reverse import reverse
 
-from teams import serializers
+from teams import models, serializers
 
 
 def test_serialize(serializer_context, team_member_factory):
@@ -14,8 +14,7 @@ def test_serialize(serializer_context, team_member_factory):
 
     expected = {
         'name': member.user.get_short_name(),
-        'team': member.team.pk,
-        'team_url': reverse(
+        'team': reverse(
             'teams:team-detail',
             kwargs={'pk': member.team.pk},
             request=serializer_context['request']),
@@ -33,11 +32,10 @@ def test_update(serializer_context, team_factory, team_member_factory):
     allow for updating that team member's informatin.
     """
     member = team_member_factory()
-    team = team_factory()
 
     data = {
         'pk': member.pk,
-        'team': team.pk,
+        'member_type': models.TeamMember.COACH,
     }
 
     serializer = serializers.TeamMemberSerializer(

@@ -30,15 +30,13 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     name = serializers.CharField(
         read_only=True,
         source='user.get_short_name')
-    team_url = serializers.HyperlinkedRelatedField(
+    team = serializers.HyperlinkedRelatedField(
         read_only=True,
-        source='team',
         view_name='teams:team-detail')
 
     class Meta:
         fields = (
-            'name', 'team', 'team_url', 'member_type', 'member_type_name',
-            'is_admin'
+            'name', 'team', 'member_type', 'member_type_name', 'is_admin'
         )
         model = models.TeamMember
 
