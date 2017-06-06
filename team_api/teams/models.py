@@ -21,6 +21,17 @@ class Team(models.Model):
         return self.name
 
 
+class TeamInvite(models.Model):
+    """
+    An invitation to join a team.
+    """
+    email = models.EmailField(verbose_name=_('email'))
+    team = models.ForeignKey(
+        'teams.Team',
+        on_delete=models.CASCADE,
+        verbose_name=_('team'))
+
+
 class TeamMember(models.Model):
     """
     A team member is a link between a user and a team.

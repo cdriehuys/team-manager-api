@@ -13,6 +13,17 @@ class TeamFactory(factory.django.DjangoModelFactory):
         model = models.Team
 
 
+class TeamInviteFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for creating team invites.
+    """
+    email = 'test@example.com'
+    team = factory.SubFactory('teams.factories.TeamFactory')
+
+    class Meta:
+        model = models.TeamInvite
+
+
 class TeamMemberFactory(factory.django.DjangoModelFactory):
     """
     Factory for creating team members.
