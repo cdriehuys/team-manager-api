@@ -15,6 +15,22 @@ class TeamInviteSerializer(serializers.ModelSerializer):
         model = models.TeamInvite
         read_only_fields = ('team',)
 
+    def create(self, validated_data):
+        """
+        Create a new invite and send out a notification.
+
+        Args:
+            validated_data:
+                The data to construct the invite from.
+
+        Returns:
+            The created invite.
+        """
+        invite = super().create(validated_data)
+        invite.send_notification()
+
+        return invite
+
     def update(self, *args, **kwargs):
         """
         Prevent an update by raising a ``ValidationError``.

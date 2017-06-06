@@ -1,3 +1,4 @@
+from django.core import mail
 from django.core.exceptions import ValidationError
 
 import pytest
@@ -27,6 +28,8 @@ def test_create(team_factory):
     assert invite.invite_accept_url == data['invite_accept_url']
     assert invite.signup_url == data['signup_url']
     assert invite.team == team
+
+    assert len(mail.outbox) == 1
 
 
 def test_serialize(team_invite_factory):
