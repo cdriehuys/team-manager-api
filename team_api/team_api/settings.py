@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third Party Apps
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -136,6 +138,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_FROM_EMAIL = 'no-reply@mydiscteam.com'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Django CORS configuration
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Configuration for Django Rest Framework
