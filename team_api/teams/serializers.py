@@ -47,6 +47,33 @@ class TeamInviteSerializer(serializers.ModelSerializer):
         """
         raise ValidationError(_('Team invitations cannot be edited.'))
 
+    def validate(self, data):
+        """
+        Ensure that this invite does not mirror an existing team member.
+
+        Args:
+            data:
+                The data passed to the serializer.
+
+        Returns:
+            The validated data.
+
+        Raises:
+            ValidationError:
+                If the data mirrors a team member that already exists.
+        """
+        email = data.get('email')
+        team = data.get('team')
+
+        if models.TeamMember.objects.filter(
+                team=team,
+                user__email=email).exists():
+            raise ValidationError(
+                _('That person already exists on the current team.'),
+                code='non_unique_invite')
+
+        return data
+
 
 class TeamMemberListSerializer(serializers.HyperlinkedModelSerializer):
     """

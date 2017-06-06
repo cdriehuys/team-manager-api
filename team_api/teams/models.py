@@ -133,3 +133,6 @@ class TeamMember(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name=_('user'))
+
+    class Meta:
+        unique_together = ('team', 'user')
