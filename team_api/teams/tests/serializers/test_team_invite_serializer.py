@@ -89,3 +89,22 @@ def test_update(team_factory, team_invite_factory):
 
     with pytest.raises(ValidationError):
         serializer.save()
+
+
+def test_validate_existing_member(team_member_factory):
+    """
+    An invite that mirrors an existing user should not be valid.
+
+    Regression test for #14
+    """
+    member = team_member_factory()
+    data = {
+        'email': member.user.email,
+        'invite_accept_url': 'http://example.com/invites',
+        'signup_url': 'http://example.com',
+        'team': member.team.pk,
+    }
+
+    serializer = serializers.TeamInviteSerializer(data=data)
+
+    assert not serializer.is_valid()
