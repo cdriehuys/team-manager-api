@@ -1,5 +1,8 @@
 from django.conf import settings
 from django.core import mail
+from django.db.utils import IntegrityError
+
+import pytest
 
 from teams import models
 
@@ -45,6 +48,16 @@ def test_send_notification(team_invite_factory):
     assert msg.from_email == settings.DEFAULT_FROM_EMAIL
     assert msg.subject == "Invited to Join {team}".format(team=invite.team)
     assert msg.to == [invite.email]
+
+
+def test_unique_email_and_team(team_invite_factory):
+    """
+    Invites should be unique with respect to email and team.
+    """
+    invite = team_invite_factory()
+
+    with pytest.raises(IntegrityError):
+        team_invite_factory(email=invite.email, team=invite.team)
 
 
 def test_user_exists(team_invite_factory, user_factory):

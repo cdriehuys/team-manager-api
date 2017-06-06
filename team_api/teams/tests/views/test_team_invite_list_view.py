@@ -16,6 +16,7 @@ def test_create_invite(api_rf, team_member_factory):
         'email': 'newuser@example.com',
         'invite_accept_url': 'http://example.com/invites',
         'signup_url': 'http://example.com/signup',
+        'team': admin.team.pk,
     }
 
     request = api_rf.post('/', data)
@@ -40,6 +41,7 @@ def test_create_invite_non_admin(api_rf, team_member_factory):
         'email': 'newuser@example.com',
         'invite_accept_url': 'http://example.com/invites',
         'signup_url': 'http://example.com/signup',
+        'team': member.team.pk,
     }
 
     request = api_rf.post('/', data)

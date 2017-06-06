@@ -13,7 +13,6 @@ class TeamInviteSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'email', 'invite_accept_url', 'signup_url', 'team')
         model = models.TeamInvite
-        read_only_fields = ('team',)
 
     def create(self, validated_data):
         """
@@ -25,6 +24,10 @@ class TeamInviteSerializer(serializers.ModelSerializer):
 
         Returns:
             The created invite.
+
+        Raises:
+            ValidationError:
+                If the invite's email and team are not unique together.
         """
         invite = super().create(validated_data)
         invite.send_notification()

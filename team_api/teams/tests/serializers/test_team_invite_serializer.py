@@ -16,13 +16,14 @@ def test_create(team_factory):
         'email': 'test@example.com',
         'invite_accept_url': 'http://example.com/invites',
         'signup_url': 'http://example.com/signup',
+        'team': team.pk,
     }
 
     serializer = serializers.TeamInviteSerializer(data=data)
 
     assert serializer.is_valid()
 
-    invite = serializer.save(team=team)
+    invite = serializer.save()
 
     assert invite.email == data['email']
     assert invite.invite_accept_url == data['invite_accept_url']
@@ -30,6 +31,23 @@ def test_create(team_factory):
     assert invite.team == team
 
     assert len(mail.outbox) == 1
+
+
+def test_create_non_unique(team_invite_factory):
+    """
+    The serializer should not validate if we attempt to save a non-
+    unique invite.
+    """
+    invite = team_invite_factory()
+    data = {
+        'email': invite.email,
+        'invite_accept_url': 'http://example.com/invites',
+        'signup_url': 'http://example.com/signup',
+        'team': invite.team.pk,
+    }
+
+    serializer = serializers.TeamInviteSerializer(data=data)
+    assert not serializer.is_valid()
 
 
 def test_serialize(team_invite_factory):
@@ -62,6 +80,7 @@ def test_update(team_factory, team_invite_factory):
         'email': 'new@example.com',
         'invite_accept_url': 'http://example.com/invites2',
         'signup_url': 'http://example.com/signup2',
+        'team': invite.team.pk,
     }
 
     serializer = serializers.TeamInviteSerializer(invite, data=data)

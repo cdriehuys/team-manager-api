@@ -41,6 +41,9 @@ class TeamInvite(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_('team'))
 
+    class Meta:
+        unique_together = ('email', 'team')
+
     @property
     def user_exists(self):
         """

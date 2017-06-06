@@ -17,7 +17,7 @@ class TeamInviteFactory(factory.django.DjangoModelFactory):
     """
     Factory for creating team invites.
     """
-    email = 'test@example.com'
+    email = factory.Sequence(lambda n: 'test{n}@example.com'.format(n=n))
     invite_accept_url = 'http://example.com/invites'
     signup_url = 'http://example.com/signup'
     team = factory.SubFactory('teams.factories.TeamFactory')
