@@ -1,5 +1,7 @@
 import pytest
 
+from rest_framework.reverse import reverse
+
 from teams import models, serializers
 
 
@@ -51,6 +53,10 @@ def test_serialize(serializer_context, team_factory, team_member_factory):
 
     expected = {
         'name': team.name,
+        'invites': reverse(
+            'teams:team-invites',
+            kwargs={'pk': team.pk},
+            request=serializer_context['request']),
         'members': member_serializer.data,
     }
 

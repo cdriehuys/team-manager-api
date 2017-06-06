@@ -132,6 +132,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+# Email settings
+
+DEFAULT_FROM_EMAIL = 'no-reply@mydiscteam.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 # Configuration for Django Rest Framework
 
 REST_FRAMEWORK = {

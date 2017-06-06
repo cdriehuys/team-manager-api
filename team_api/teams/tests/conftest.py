@@ -54,6 +54,17 @@ def team_factory(db):
 
 
 @pytest.fixture
+def team_invite_factory(db):
+    """
+    Get the factory used for creating team invites.
+
+    Returns:
+        ``teams.factories.TeamInviteFactory``
+    """
+    return factories.TeamInviteFactory
+
+
+@pytest.fixture
 def team_member_factory(db):
     """
     Get the factory used for creating team members.

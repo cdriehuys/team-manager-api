@@ -1,6 +1,48 @@
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
+
 from rest_framework import serializers
 
 from teams import models
+
+
+class TeamInviteSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the ``TeamInvite`` model.
+    """
+    class Meta:
+        fields = ('id', 'email', 'invite_accept_url', 'signup_url', 'team')
+        model = models.TeamInvite
+        read_only_fields = ('team',)
+
+    def create(self, validated_data):
+        """
+        Create a new invite and send out a notification.
+
+        Args:
+            validated_data:
+                The data to construct the invite from.
+
+        Returns:
+            The created invite.
+        """
+        invite = super().create(validated_data)
+        invite.send_notification()
+
+        return invite
+
+    def update(self, *args, **kwargs):
+        """
+        Prevent an update by raising a ``ValidationError``.
+
+        Invites should not be mutable because then they could be
+        different from what the user thinks they will be from the email
+        notification they received.
+
+        Raises:
+            ValidationError
+        """
+        raise ValidationError(_('Team invitations cannot be edited.'))
 
 
 class TeamMemberListSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,13 +98,16 @@ class TeamSerializer(serializers.ModelSerializer):
     """
     Serializer for the Team model.
     """
+    invites = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='teams:team-invites')
     members = TeamMemberListSerializer(
         many=True,
         read_only=True,
         required=False)
 
     class Meta:
-        fields = ('name', 'members')
+        fields = ('name', 'invites', 'members')
         model = models.Team
 
     def create(self, validated_data):
