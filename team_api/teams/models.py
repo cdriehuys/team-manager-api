@@ -29,6 +29,13 @@ class TeamInvite(models.Model):
     An invitation to join a team.
     """
     email = models.EmailField(verbose_name=_('email'))
+    invite_accept_url = models.URLField(
+        help_text=_('The URL where the user can go to accept the invitation.'),
+        verbose_name=_('invite accept URL'))
+    signup_url = models.URLField(
+        help_text=_('The URL where the user can go to sign up for an '
+                    'account.'),
+        verbose_name=_('signup url'))
     team = models.ForeignKey(
         'teams.Team',
         on_delete=models.CASCADE,

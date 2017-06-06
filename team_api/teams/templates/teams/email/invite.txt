@@ -6,11 +6,11 @@ You've been invited to join the team '{{ team.name }}'.
 {% endblocktrans %}
 
 {% if invite.user_exists %}
-{% blocktrans %}
-You can accept the invitation by going to the app.
+{% blocktrans with invite_url=invite.invite_accept_url %}
+You can accept the invitation at {{ invite_url }}.
 {% endblocktrans %}
 {% else %}
-{% blocktrans %}
-To accept the invitation, sign up for an account and then accept the invitation.
+{% blocktrans with signup_url=invite.signup_url %}
+To accept the invitation, sign up for an account at {{ signup_url }} and then accept the invitation.
 {% endblocktrans %}
 {% endif %}

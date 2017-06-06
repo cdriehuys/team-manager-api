@@ -10,6 +10,8 @@ def test_create(team_factory):
     """
     models.TeamInvite.objects.create(
         email='test@example.com',
+        invite_accept_url='example.com/invites',
+        signup_url='example.com/signup',
         team=team_factory())
 
 
