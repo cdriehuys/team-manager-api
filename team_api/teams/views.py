@@ -134,3 +134,18 @@ class TeamMemberDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.TeamMemberPermission,)
     queryset = models.TeamMember.objects.all()
     serializer_class = serializers.TeamMemberSerializer
+
+
+class UserInviteListView(generics.ListAPIView):
+    """
+    List the pending invitations for a user.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.TeamInviteSerializer
+
+    def get_queryset(self):
+        """
+        Get the invitations matching the current user's email.
+        """
+        return models.TeamInvite.objects.filter(
+            email=self.request.user.email)
