@@ -7,6 +7,25 @@ import pytest
 from teams import models
 
 
+def test_accept(team_invite_factory, user_factory):
+    """
+    Accepting an invite should create a new team member linking the team
+    given in the invitation and the user given as an argument.
+    """
+    invite = team_invite_factory()
+    user = user_factory(email=invite.email)
+
+    invite.accept(user)
+
+    assert models.TeamInvite.objects.count() == 0
+    assert invite.team.members.count() == 1
+
+    member = invite.team.members.get()
+
+    assert member.team == invite.team
+    assert member.user == user
+
+
 def test_create(team_factory):
     """
     Test creating a new team invitation.

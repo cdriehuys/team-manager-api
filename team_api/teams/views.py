@@ -4,6 +4,7 @@ from rest_framework import generics, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from teams import models, permissions, serializers
 
@@ -134,3 +135,57 @@ class TeamMemberDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.TeamMemberPermission,)
     queryset = models.TeamMember.objects.all()
     serializer_class = serializers.TeamMemberSerializer
+
+
+class UserInviteDetailView(generics.DestroyAPIView):
+    """
+    View for accepting or deleting invitations.
+    """
+    permission_classes = (IsAuthenticated,)
+    # We use a blank serializer just so we can have the 'Post' button
+    # appear in the browsable API.
+    serializer_class = Serializer
+
+    def get_queryset(self):
+        """
+        Get the invitations matching the current user's email.
+
+        Returns:
+            A queryset of ``TeamInvite`` instances filtered by the
+            current user's email.
+        """
+        return models.TeamInvite.objects.filter(
+            email=self.request.user.email)
+
+    def post(self, request, pk=None):
+        """
+        Accept an invitation.
+
+        Args:
+            request:
+                The request being made.
+            pk:
+                The primary key of the invite being accepted.
+
+        Returns:
+            An empty response.
+        """
+        invite = self.get_object()
+        invite.accept(request.user)
+
+        return Response({})
+
+
+class UserInviteListView(generics.ListAPIView):
+    """
+    List the pending invitations for a user.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.TeamInviteSerializer
+
+    def get_queryset(self):
+        """
+        Get the invitations matching the current user's email.
+        """
+        return models.TeamInvite.objects.filter(
+            email=self.request.user.email)

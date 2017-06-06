@@ -51,6 +51,21 @@ class TeamInvite(models.Model):
         """
         return get_user_model().objects.filter(email=self.email).exists()
 
+    def accept(self, user):
+        """
+        Accept the invitation.
+
+        Creates a new team member linking the invite's team and the
+        specified user.
+
+        Args:
+            user:
+                The user accepting the invitation.
+        """
+        TeamMember.objects.create(team=self.team, user=user)
+
+        self.delete()
+
     def send_notification(self):
         """
         Send an email notification about the invite.
