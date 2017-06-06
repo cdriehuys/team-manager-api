@@ -2,6 +2,7 @@ from django.utils.translation import ugettext as _
 
 from rest_framework import generics, status, viewsets
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from teams import models, permissions, serializers
@@ -11,6 +12,7 @@ class TeamInviteListView(generics.ListCreateAPIView):
     """
     List and create team invites.
     """
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.TeamInviteSerializer
 
     def check_permissions(self, request):

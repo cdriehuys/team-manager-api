@@ -1,3 +1,5 @@
+from django.contrib.auth.models import AnonymousUser
+
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
@@ -75,6 +77,23 @@ def test_list_invites(api_rf, team_invite_factory, team_member_factory):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data == serializer.data
+
+
+def test_list_invites_anonymous_user(api_rf, team_factory):
+    """
+    Anonymous users should not be able to access a team's pending
+    invites.
+
+    Regression test for #12
+    """
+    team = team_factory()
+
+    request = api_rf.get('/')
+    request.user = AnonymousUser()
+
+    response = team_invite_list_view(request, pk=team.pk)
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
 def test_list_invites_non_admin(
