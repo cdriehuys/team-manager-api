@@ -1,8 +1,8 @@
 {% load i18n %}
 
 
-{% blocktrans %}
-You've been invited to join the team '{{ team.name }}'.
+{% blocktrans with name=team.name %}
+You've been invited to join the team '{{ name }}'.
 {% endblocktrans %}
 
 {% if invite.user_exists %}

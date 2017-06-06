@@ -59,7 +59,9 @@ class TeamInvite(models.Model):
         subject = ugettext('Invited to Join %(team)s' % {
             'team': self.team.name
         })
-        message = render_to_string('teams/email/invite.txt')
+        message = render_to_string(
+            'teams/email/invite.txt',
+            self._get_notification_context())
 
         return bool(mail.send_mail(
             from_email=settings.DEFAULT_FROM_EMAIL,
