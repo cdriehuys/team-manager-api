@@ -1,4 +1,5 @@
 ---
 # General AWS Settings
 
+aws_application_name: myapp
 aws_region: us-east-1

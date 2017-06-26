@@ -1,4 +1,18 @@
 ---
+- name: Create new AMI from instance
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_ami
+    description: AMI for {{ aws_application_name }} created at {{ ansible_date_time.iso8601 }}
+    instance_id: "{{ item }}"
+    name: "{{ aws_application_name }}"
+    region: "{{ aws_region }}"
+    tags:
+      Application: "{{ aws_application_name }}"
+    wait: yes
+  with_items: "{{ ami_instance.instance_ids }}"
+  register: ami
+
 - name: Terminate instance used to build AMI
   environment: "{{ aws_env }}"
   local_action:
