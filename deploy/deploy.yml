@@ -11,10 +11,19 @@
 
 - name: Configure instance to create AMI
   hosts: amibuilder
+  remote_user: ubuntu
   gather_facts: false
 
   vars_files:
     - env_vars/base.yml
+
+  pre_tasks:
+    - name: Install python 2
+      become: yes
+      become_user: root
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      register: output
+      changed_when: output.stdout != ""
 
   tasks:
     - name: Ping builder instance

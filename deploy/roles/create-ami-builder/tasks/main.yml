@@ -1,4 +1,13 @@
 ---
+- name: Create AWS key for builder instance
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_key
+    key_material: "{{ item }}"
+    name: "{{ aws_key_name }}"
+    region: "{{ aws_region }}"
+  with_file: "{{ aws_key_file }}"
+
 - name: Create temporary instance to build AMI
   environment: "{{ aws_env }}"
   local_action:
@@ -9,6 +18,7 @@
       Application: "{{ aws_application_name }}"
       Role: ami-builder
     instance_type: t2.nano
+    key_name: "{{ aws_key_name }}"
     region: "{{ aws_region }}"
     state: present
     wait: yes
@@ -19,4 +29,12 @@
   add_host:
     hostname: "{{ item.public_ip }}"
     groupname: amibuilder
+  with_items: "{{ ami_instance.instances }}"
+
+- name: Wait for builder instance to be accessible
+  wait_for:
+    host: "{{ item.public_ip }}"
+    port: 22
+    timeout: 300
+    state: started
   with_items: "{{ ami_instance.instances }}"

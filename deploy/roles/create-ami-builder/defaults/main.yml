@@ -4,6 +4,10 @@
 aws_application_name: myapp
 aws_region: us-east-1
 
+# SSH Key Info
+aws_key_file: '~/.ssh/id_rsa.pub'
+aws_key_name: "{{ aws_application_name }}"
+
 
 # AMI Specific Variables
 
