@@ -3,3 +3,8 @@
 
 aws_application_name: myapp
 aws_region: us-east-1
+
+
+# AMI Settings
+
+ami_name: "{{ aws_application_name }}-{{ ansible_date_time.iso8601 | regex_replace('[^a-zA-Z0-9]', '-') }}"

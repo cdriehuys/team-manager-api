@@ -1,2 +1,11 @@
 ---
 aws_application_name: team-manager-api
+
+
+# NGINX
+
+nginx_conf_name: team-manager-api.conf
+nginx_site_root: /var/www/team-manager-api
+nginx_site_servers:
+  - name: api.mydiscteam.com
+    listen: 80
