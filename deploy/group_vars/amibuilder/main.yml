@@ -1,0 +1,46 @@
+# NGINX
+
+nginx_site_conf_name: team-manager-api.conf
+nginx_site_root: /var/www/team-manager-api
+nginx_socket: 'http://{{ gunicorn_socket_unix }}'
+
+nginx_site_servers:
+  - name: api.mydiscteam.com
+    listen: 80
+    extra_params: |
+          location = /favicon.ico {
+            access_log off;
+            root {{ django_static_root }}/images;
+          }
+
+          location /media/ {
+            alias {{ django_media_root }}/;
+          }
+
+          location /static/ {
+            alias {{ django_static_root }}/;
+          }
+
+          location / {
+            include proxy_params;
+            proxy_pass {{ nginx_socket }};
+          }
+
+
+
+# Django Application
+
+app_name: team-manager-api
+app_package: team_api
+
+app_repo: 'https://github.com/cdriehuys/team-manager-api'
+
+django_requirements: "{{ django_project }}/requirements/base.txt"
+django_manage_commands:
+  - 'collectstatic --noinput'
+
+django_allowed_hosts:
+  - api.mydiscteam.com
+django_secret_key: "{{ vault_django_secret_key }}"
+django_media_root: "{{ nginx_site_root }}/media"
+django_static_root: "{{ nginx_site_root }}/static"

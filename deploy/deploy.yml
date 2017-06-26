@@ -30,6 +30,7 @@
       changed_when: output.stdout != ""
 
   roles:
+    - cdriehuys.django-app
     - cdriehuys.nginx
 
 - name: Finalize AMI
