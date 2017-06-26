@@ -106,3 +106,7 @@ ENV/
 
 # Database
 *.sqlite3
+
+# Ansible
+*.retry
+VAULT_PASSWORD.txt

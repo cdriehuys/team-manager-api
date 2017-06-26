@@ -1,0 +1,22 @@
+---
+- name: Create temporary instance to build AMI
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2
+    count: 1
+    image: "{{ ami_base }}"
+    instance_tags:
+      Application: "{{ aws_application_name }}"
+      Role: ami-builder
+    instance_type: t2.nano
+    region: "{{ aws_region }}"
+    state: present
+    wait: yes
+    wait_timeout: 300
+  register: ami_instance
+
+- name: Add AMI builder instance to 'amibuilder' host group
+  add_host:
+    hostname: "{{ item.public_ip }}"
+    groupname: amibuilder
+  with_items: "{{ ami_instance.instances }}"

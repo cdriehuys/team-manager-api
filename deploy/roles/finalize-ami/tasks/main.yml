@@ -1,0 +1,8 @@
+---
+- name: Terminate instance used to build AMI
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2
+    instance_ids: "{{ ami_instance.instance_ids }}"
+    region: "{{ aws_region }}"
+    state: absent

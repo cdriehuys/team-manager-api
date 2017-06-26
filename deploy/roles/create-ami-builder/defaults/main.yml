@@ -1,0 +1,10 @@
+---
+# General AWS Configuration
+
+aws_application_name: myapp
+aws_region: us-east-1
+
+
+# AMI Specific Variables
+
+ami_base: ami-e4139df2

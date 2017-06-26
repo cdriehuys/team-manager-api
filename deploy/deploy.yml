@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - env_vars/base.yml
+
+  roles:
+    - create-ami-builder
+
+- name: Configure instance to create AMI
+  hosts: amibuilder
+  gather_facts: false
+
+  vars_files:
+    - env_vars/base.yml
+
+  tasks:
+    - name: Ping builder instance
+      ping:
+
+- name: Finalize AMI
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - env_vars/base.yml
+
+  roles:
+    - finalize-ami
