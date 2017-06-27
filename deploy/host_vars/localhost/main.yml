@@ -2,3 +2,11 @@
 aws_env:
   AWS_ACCESS_KEY_ID: "{{ vault_aws_access_key_id }}"
   AWS_SECRET_ACCESS_KEY: "{{ vault_aws_secret_access_key }}"
+
+
+# Database Configuration
+
+db_admin_password: "{{ vault_db_admin_password }}"
+db_admin_username: "{{ vault_db_admin_username }}"
+db_password: "{{ vault_db_password }}"
+db_username: "{{ vault_db_username }}"

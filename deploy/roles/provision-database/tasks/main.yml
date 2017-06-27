@@ -1,0 +1,61 @@
+---
+- name: Create database security group
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_group
+    description: Security group for {{ aws_application_name }} databases.
+    name: "{{ db_security_group_name }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        from_port: "{{ db_port }}"
+        to_port: "{{ db_port }}"
+        cidr_ip: 0.0.0.0/0
+  register: db_security_group
+
+- name: Create database
+  environment: "{{ aws_env }}"
+  local_action:
+    module: rds
+    command: create
+    db_engine: postgres
+    db_name: "{{ db_name }}"
+    instance_name: "{{ db_instance_name }}"
+    instance_type: db.t2.micro
+    password: "{{ db_admin_password }}"
+    port: "{{ db_port }}"
+    region: "{{ aws_region }}"
+    size: 5
+    subnet: default
+    tags:
+      Application: "{{ aws_application_name }}"
+    upgrade: yes
+    username: "{{ db_admin_username }}"
+    vpc_security_groups: "{{ db_security_group.group_id }}"
+    wait: yes
+    wait_timeout: 1200
+  register: db_instance
+
+- name: Create database user for application
+  local_action:
+    module: postgresql_user
+    db: "{{ db_name }}"
+    login_host: "{{ db_instance.instance.endpoint }}"
+    login_password: "{{ db_admin_password }}"
+    login_user: "{{ db_admin_username }}"
+    name: "{{ db_username }}"
+    password: "{{ db_password }}"
+    port: "{{ db_port }}"
+    role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
+
+- name: Set application database user permissions
+  local_action:
+    module: postgresql_privs
+    db: "{{ db_name }}"
+    login_host: "{{ db_instance.instance.endpoint }}"
+    login_password: "{{ db_admin_password }}"
+    login_user: "{{ db_admin_username }}"
+    port: "{{ db_port }}"
+    privs: ALL
+    role: "{{ db_username }}"
+    type: database
