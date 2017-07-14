@@ -5,6 +5,7 @@
 
   vars_files:
     - env_vars/base.yml
+    - env_vars/base-vault.yml
 
   roles:
     - provision-database
@@ -20,6 +21,7 @@
 
   vars_files:
     - env_vars/base.yml
+    - env_vars/base-vault.yml
 
   pre_tasks:
     - name: Install python 2
@@ -29,6 +31,12 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       register: output
       changed_when: output.stdout != ""
+      until: output.rc == 0
+      retries: 3
+      delay: 1
+    - name: Restore database instance reference
+      set_fact:
+        db_instance: "{{ hostvars['localhost'].db_instance }}"
 
   roles:
     - cdriehuys.django-app

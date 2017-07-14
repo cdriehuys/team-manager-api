@@ -1,2 +1,9 @@
 ---
 aws_application_name: team-manager-api
+
+# Database Settings
+
+db_name: "{{ aws_application_name | regex_replace('[^a-zA-Z0-9]', '') }}"
+db_password: "{{ vault_db_password }}"
+db_port: 5432
+db_username: "{{ vault_db_username }}"

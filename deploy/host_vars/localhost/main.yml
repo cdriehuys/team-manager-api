@@ -8,5 +8,3 @@ aws_env:
 
 db_admin_password: "{{ vault_db_admin_password }}"
 db_admin_username: "{{ vault_db_admin_username }}"
-db_password: "{{ vault_db_password }}"
-db_username: "{{ vault_db_username }}"

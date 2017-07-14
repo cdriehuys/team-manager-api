@@ -10,12 +10,7 @@ aws_region: us-east-1
 # Application Database
 db_admin_password: password
 db_admin_username: dbadmin
-db_username: django
-db_password: password
-
 db_instance_name: "{{ aws_application_name }}-db"
-db_name: "{{ aws_application_name | regex_replace('[^a-zA-Z0-9]', '') }}"
-db_port: 5432
 
 # Database security group
 db_security_group_name: "{{ aws_application_name }}-db-group"

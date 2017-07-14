@@ -36,6 +36,10 @@
     wait_timeout: 1200
   register: db_instance
 
+- name: Save reference to created DB instance
+  set_fact:
+    db_instance: "{{ db_instance }}"
+
 - name: Create database user for application
   local_action:
     module: postgresql_user
@@ -44,6 +48,7 @@
     login_password: "{{ db_admin_password }}"
     login_user: "{{ db_admin_username }}"
     name: "{{ db_username }}"
+    no_password_changes: yes
     password: "{{ db_password }}"
     port: "{{ db_port }}"
     role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
