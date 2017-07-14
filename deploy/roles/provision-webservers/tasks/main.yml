@@ -9,3 +9,37 @@
     name: "{{ webserver_lc_name }}"
     region: "{{ aws_region }}"
     state: present
+  register: launch_config
+
+- debug:
+    var: launch_config
+
+- name: Create load balancer
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_elb_lb
+    connection_draining_timeout: 20
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+    name: "{{ lb_name }}"
+    region: "{{ aws_region }}"
+    state: present
+    zones: "{{ aws_region }}a"
+  register: load_balancer
+
+- debug:
+    var: load_balancer
+
+- name: Create autoscaling group
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_asg
+    desired_capacity: 1
+    launch_config_name: "{{ launch_config.result.name }}"
+    load_balancers: ["{{ load_balancer.elb.name }}"]
+    max_size: 1
+    min_size: 1
+    name: "{{ asg_name }}"
+    region: "{{ aws_region }}"
