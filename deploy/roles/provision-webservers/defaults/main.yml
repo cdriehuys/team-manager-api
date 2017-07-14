@@ -1,0 +1,6 @@
+---
+aws_application_name: myapp
+aws_region: us-east-1
+
+webserver_instance_type: t2.nano
+webserver_lc_name: "{{ aws_application_name }}-lc-{{ ansible_date_time.iso8601 | regex_replace('[^a-zA-Z0-9]', '-') }}"

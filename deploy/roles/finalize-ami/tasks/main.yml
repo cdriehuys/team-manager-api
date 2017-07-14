@@ -11,7 +11,11 @@
       Application: "{{ aws_application_name }}"
     wait: yes
   with_items: "{{ ami_instance.instance_ids }}"
-  register: ami
+  register: ami_instances
+
+- name: Save reference to created AMI
+  set_fact:
+    ami: "{{ ami_instances.results[0] }}"
 
 - name: Terminate instance used to build AMI
   environment: "{{ aws_env }}"

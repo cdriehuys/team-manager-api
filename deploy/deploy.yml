@@ -42,7 +42,7 @@
     - cdriehuys.django-app
     - cdriehuys.nginx
 
-- name: Finalize AMI
+- name: Provision and deploy webservers
   hosts: localhost
   connection: local
 
@@ -51,3 +51,4 @@
 
   roles:
     - finalize-ami
+    - provision-webservers

@@ -1,0 +1,11 @@
+---
+- name: Create launch configuration
+  environment: "{{ aws_env }}"
+  local_action:
+    module: ec2_lc
+    image_id: "{{ ami.image_id }}"
+    instance_profile_name: "{{ webserver_role | default(omit) }}"
+    instance_type: "{{ webserver_instance_type }}"
+    name: "{{ webserver_lc_name }}"
+    region: "{{ aws_region }}"
+    state: present
